@@ -1,137 +1,190 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Sidebar() {
   const [activeItem, setActiveItem] = useState('my-day');
 
   const NavItem = ({ id, icon, label, isActive }) => (
-    <a
-      href="#"
-      onClick={() => setActiveItem(id)}
-      className={`group flex items-center gap-3 p-3 rounded-2xl transition-all duration-300 ${
-        isActive 
-          ? 'bg-gradient-to-r from-indigo-500/20 via-blue-500/20 to-sky-500/20 text-white border border-white/10'
-          : 'hover:bg-white/5 text-white/80 hover:text-white'
-      }`}
-    >
-      <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
-        isActive 
-          ? 'bg-gradient-to-br from-indigo-500/20 to-blue-500/20 border border-white/10' 
-          : 'bg-white/10'
-      }`}>
-        {icon}
-      </div>
-      <span className="font-medium tracking-wide">{label}</span>
-    </a>
+    <div className="relative">
+      {/* Left indicator */}
+      {isActive && (
+        <div className="absolute left-[-24px] top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-600 rounded-r-full" />
+      )}
+      
+      <a
+        href="#"
+        onClick={() => setActiveItem(id)}
+        className={`group flex items-center gap-4 p-3.5 rounded-2xl transition-all duration-300 ${
+          isActive 
+            ? 'bg-blue-50/50 text-blue-600'
+            : 'text-slate-600'
+        }`}
+      >
+        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
+          isActive 
+            ? 'bg-white shadow-sm' 
+            : 'bg-white'
+        }`}>
+          <div className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-slate-600'} transition-transform duration-300 group-hover:rotate-6`}>
+            {icon}
+          </div>
+        </div>
+        <span className={`font-medium ${isActive ? 'text-blue-600' : ''}`}>{label}</span>
+      </a>
+    </div>
   );
 
   return (
-    <div className="relative w-72 min-h-screen bg-[#0B1437] bg-opacity-95 p-5 border-r border-white/5">
-      {/* Gradient Orbs */}
-      <div className="absolute top-0 -left-20 w-60 h-60 bg-sky-400/20 rounded-full filter blur-3xl"></div>
-      <div className="absolute bottom-0 -right-20 w-60 h-60 bg-blue-400/20 rounded-full filter blur-3xl"></div>
+    <div className="fixed top-0 left-0 h-[100vh] flex flex-col">
+      <div className="relative w-[280px] h-full m-4 bg-white rounded-[40px] p-6 border border-[#E5E9FF] shadow-[0_8px_40px_-12px_rgba(0,0,0,0.12)]">
+        {/* Elegant gradient overlays - more subtle */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FAFBFF] via-white to-[#F8F9FF] rounded-[40px]"></div>
+        
+        {/* Subtle top highlight */}
+        <div className="absolute top-0 left-4 right-4 h-[1px] bg-white/50"></div>
+        
+        {/* Bottom curved shape */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#F5F7FF] via-white to-transparent rounded-b-[40px]"></div>
 
-      {/* Glass Container */}
-      <div className="relative z-10">
-        {/* Profile Section */}
-        <div className="mb-8 p-4 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm">
-          <div className="flex items-center gap-4">
+        <div className="relative z-10 h-full flex flex-col">
+          {/* Logo Section */}
+          <div className="mb-6 px-2">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-blue-500 to-sky-500 rounded-xl blur opacity-40"></div>
-              <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 via-blue-500 to-sky-500 p-[1px]">
-                <div className="w-full h-full rounded-xl bg-[#0B1437] flex items-center justify-center">
-                  <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-blue-300 to-sky-300">D</span>
+              <h1 className="text-4xl font-bold tracking-tight">
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-2">      
+                    {/* Logo Text - Now Clickable */}
+                    <Link 
+                      to="/my-day" 
+                      onClick={() => setActiveItem('my-day')}
+                      className="flex items-center hover:opacity-80 transition-opacity"
+                    >
+                      <span className="text-slate-800">Todo</span>
+                      <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-extrabold">
+                        ctive
+                      </span>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-sky-100">Daru</h2>
+              </h1>
+              
+              {/* Decorative Elements */}
+              <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full blur-3xl opacity-30"></div>
+              <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-gradient-to-tr from-blue-200 to-indigo-200 rounded-full blur-3xl opacity-20"></div>
             </div>
           </div>
-        </div>
 
-        {/* Main Navigation */}
-        <nav className="space-y-2 mb-8">
-          <NavItem
-            id="my-day"
-            isActive={activeItem === 'my-day'}
-            icon={
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zm0 16a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-              </svg>
-            }
-            label="My Day"
-          />
+          {/* Main Navigation */}
+          <nav className="relative space-y-0.5 mb-6 px-2">
+            {/* Subtle separator line */}
+            <div className="absolute -left-6 top-0 w-[1px] h-full bg-[#E5E9FF]"></div>
+            
+            {/* NavItems */}
+            <NavItem
+              id="my-day"
+              isActive={activeItem === 'my-day'}
+              icon={
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              }
+              label="My Day"
+            />
 
-          <NavItem
-            id="next-7-days"
-            isActive={activeItem === 'next-7-days'}
-            icon={
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-              </svg>
-            }
-            label="Next 7 Days"
-          />
+            <NavItem
+              id="next-7-days"
+              isActive={activeItem === 'next-7-days'}
+              icon={
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              }
+              label="Next 7 Days"
+            />
 
-          <NavItem
-            id="all-tasks"
-            isActive={activeItem === 'all-tasks'}
-            icon={
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clipRule="evenodd" />
-              </svg>
-            }
-            label="All Tasks"
-          />
+            <NavItem
+              id="all-tasks"
+              isActive={activeItem === 'all-tasks'}
+              icon={
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+              }
+              label="All Tasks"
+            />
 
-          <NavItem
-            id="calendar"
-            isActive={activeItem === 'calendar'}
-            icon={
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-            }
-            label="My Calendar"
-          />
-        </nav>
+            <NavItem
+              id="calendar"
+              isActive={activeItem === 'calendar'}
+              icon={
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              }
+              label="My Calendar"
+            />
+          </nav>
 
-        {/* Lists Section */}
-        <div>
-          <div className="flex items-center justify-between mb-4 px-2">
-            <h3 className="font-medium text-white/50 text-sm uppercase tracking-wider">My Lists</h3>
-            <button className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 via-blue-500 to-sky-500 rounded-lg blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
-              <div className="relative w-8 h-8 rounded-lg bg-white/10 hover:bg-white/15 flex items-center justify-center transition-all duration-300">
-                <svg className="w-4 h-4 text-white/70 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 20 20">
+          {/* Lists Section */}
+          <div className="px-2 flex-1">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-medium text-slate-400 text-sm uppercase tracking-wider">
+                My Lists
+              </h3>
+              <button className="w-8 h-8 rounded-lg bg-white flex items-center justify-center transition-all duration-200 border border-slate-200 shadow-sm">
+                <svg className="w-4 h-4 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
                 </svg>
-              </div>
-            </button>
+              </button>
+            </div>
+
+            <div className="space-y-0.5">
+              <NavItem
+                id="personal"
+                isActive={activeItem === 'personal'}
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                }
+                label="Personal"
+              />
+              <NavItem
+                id="work"
+                isActive={activeItem === 'work'}
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                }
+                label="Work"
+              />
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <NavItem
-              id="personal"
-              isActive={activeItem === 'personal'}
-              icon={
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+          {/* Logout Section */}
+          <div className="px-2 mt-4 pt-4 border-t border-[#E5E9FF]">
+            <a
+              href="#"
+              className="group flex items-center gap-4 p-3.5 rounded-xl transition-all duration-300 text-slate-600"
+            >
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white transition-all duration-300">
+                <svg 
+                  className="w-5 h-5 text-red-500" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" 
+                  />
                 </svg>
-              }
-              label="Personal"
-            />
-            <NavItem
-              id="work"
-              isActive={activeItem === 'work'}
-              icon={
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clipRule="evenodd" />
-                </svg>
-              }
-              label="Work"
-            />
+              </div>
+              <span className="font-medium">Logout</span>
+            </a>
           </div>
         </div>
       </div>
