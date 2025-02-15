@@ -1075,9 +1075,9 @@ function MyDay() {
           </Droppable>
         </DragDropContext>
 
-        {/* Task Input moved to bottom */}
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-4xl px-8">
-          <div className="relative">
+        {/* Task Input - Updated positioning */}
+        <div className="fixed bottom-8 left-[58%] -translate-x-1/2 w-full max-w-2xl px-8">
+          <div className="relative bg-white/90 rounded-2xl shadow-lg backdrop-blur-xl border border-slate-200/70">
             <input
               type="text"
               value={newTask}
@@ -1085,7 +1085,7 @@ function MyDay() {
               onKeyPress={handleKeyPress}
               placeholder="Add task"
               disabled={loading}
-              className="w-full px-7 py-5 bg-white/90 rounded-2xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 border border-slate-200/70 shadow-lg backdrop-blur-xl disabled:opacity-50"
+              className="w-full px-7 py-5 bg-transparent rounded-2xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
             />
             <button 
               onClick={handleAddTask}

@@ -7,12 +7,13 @@ function App() {
     <Router>
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
-        <Routes>
-          {/* Redirect root path to /my-day */}
-          <Route path="/" element={<Navigate to="/my-day" replace />} />
-          <Route path="/my-day" element={<MyDay />} />
-          {/* Add other routes as needed */}
-        </Routes>
+        <main className="flex-1 ml-0 md:ml-[312px] p-4 transition-all duration-300">
+          <Routes>
+            <Route path="/" element={<Navigate to="/my-day" replace />} />
+            <Route path="/my-day" element={<MyDay />} />
+            {/* Add other routes as needed */}
+          </Routes>
+        </main>
       </div>
     </Router>
   );
