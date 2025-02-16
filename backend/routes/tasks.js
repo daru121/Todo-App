@@ -8,10 +8,11 @@ const fs = require('fs');
 // Konfigurasi multer untuk upload file
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/') // pastikan folder 'uploads' sudah dibuat
+    cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname)
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
   }
 });
 
@@ -22,7 +23,7 @@ const upload = multer({
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Invalid file type'));
+      cb(new Error('Invalid file type. Only JPG, PNG and GIF are allowed.'));
     }
   }
 });
@@ -60,7 +61,7 @@ router.post('/tasks', async (req, res) => {
 
 // Update task
 router.patch('/tasks/:id', async (req, res) => {
-  const { completed, reminder_date, reminder_time, title, notes, priority } = req.body;
+  const { completed, reminder_date, reminder_time, title, notes, priority, list_type } = req.body;
   
   try {
     let query = 'UPDATE tasks SET';
@@ -96,6 +97,11 @@ router.patch('/tasks/:id', async (req, res) => {
     if (priority !== undefined) {
       updates.push(' priority = ?');
       values.push(priority);
+    }
+    
+    if (list_type !== undefined) {
+      updates.push(' list_type = ?');
+      values.push(list_type);
     }
     
     query += updates.join(',');
@@ -134,47 +140,38 @@ router.delete('/tasks/:id', async (req, res) => {
 });
 
 // Endpoint untuk upload attachments
-router.post('/tasks/:id/attachments', upload.array('images', 5), async (req, res) => {
+router.post('/tasks/:taskId/attachments', upload.single('file'), async (req, res) => {
   try {
-    const taskId = req.params.id;
-    const files = req.files;
-    
-    if (!files || files.length === 0) {
-      return res.status(400).json({ error: 'No files uploaded' });
-    }
-    
-    // Generate URLs untuk file yang diupload
-    const fileUrls = files.map(file => {
-      return `/uploads/${file.filename}`;
+    const taskId = req.params.taskId;
+    const fileUrl = `/uploads/${req.file.filename}`;
+
+    const [result] = await db.query(
+      'INSERT INTO task_attachments (task_id, file_url) VALUES (?, ?)',
+      [taskId, fileUrl]
+    );
+
+    res.json({
+      id: result.insertId,
+      task_id: taskId,
+      file_url: fileUrl
     });
-
-    // Simpan informasi attachment ke database
-    const attachments = await Promise.all(fileUrls.map(url => {
-      return db.query(
-        'INSERT INTO task_attachments (task_id, file_url) VALUES (?, ?)',
-        [taskId, url]
-      );
-    }));
-
-    res.json({ urls: fileUrls });
   } catch (error) {
-    console.error('Error uploading attachments:', error);
-    res.status(500).json({ error: 'Failed to upload files' });
+    console.error('Error uploading file:', error);
+    res.status(500).json({ error: 'Error uploading file' });
   }
 });
 
 // Endpoint untuk mendapatkan attachments
-router.get('/tasks/:id/attachments', async (req, res) => {
+router.get('/tasks/:taskId/attachments', async (req, res) => {
   try {
-    const taskId = req.params.id;
     const [attachments] = await db.query(
       'SELECT * FROM task_attachments WHERE task_id = ?',
-      [taskId]
+      [req.params.taskId]
     );
-    res.json({ attachments });
+    res.json(attachments);
   } catch (error) {
     console.error('Error fetching attachments:', error);
-    res.status(500).json({ error: 'Failed to fetch attachments' });
+    res.status(500).json({ error: 'Error fetching attachments' });
   }
 });
 

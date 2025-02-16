@@ -1,47 +1,55 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function Sidebar() {
-  const [activeItem, setActiveItem] = useState('my-day');
+  const location = useLocation();
+  const currentPath = location.pathname;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const NavItem = ({ id, icon, label, isActive }) => (
-    <div className="relative">
-      {isActive && (
-        <div className="absolute left-[-24px] top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-600 rounded-r-full" />
-      )}
-      
-      <a
-        href="#"
-        onClick={() => {
-          setActiveItem(id);
-          if (window.innerWidth < 768) {
-            setIsSidebarOpen(false);
-          }
-        }}
-        className={`group flex items-center gap-4 p-3.5 rounded-2xl transition-all duration-300 ${
-          isActive 
-            ? 'bg-blue-50/50 text-blue-600'
-            : 'text-slate-600'
-        }`}
-      >
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
-          isActive 
-            ? 'bg-white shadow-sm' 
-            : 'bg-white'
-        }`}>
-          <div className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-slate-600'} transition-transform duration-300 group-hover:rotate-6`}>
-            {icon}
+  const NavItem = ({ id, icon, label, to }) => {
+    const isActive = (
+      (to === '/my-day' && currentPath === '/') || 
+      currentPath === to ||
+      (to === '/next7days' && currentPath === '/next7days')
+    );
+
+    return (
+      <div className="relative">
+        {isActive && (
+          <div className="absolute left-[-24px] top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-600 rounded-r-full" />
+        )}
+        
+        <Link
+          to={to}
+          onClick={() => {
+            if (window.innerWidth < 768) {
+              setIsSidebarOpen(false);
+            }
+          }}
+          className={`group flex items-center gap-4 p-3.5 rounded-2xl transition-all duration-300 ${
+            isActive 
+              ? 'bg-blue-50/50 text-blue-600'
+              : 'text-slate-600'
+          }`}
+        >
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
+            isActive 
+              ? 'bg-white shadow-sm' 
+              : 'bg-white'
+          }`}>
+            <div className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-slate-600'} transition-transform duration-300 group-hover:rotate-6`}>
+              {icon}
+            </div>
           </div>
-        </div>
-        <span className={`font-medium ${isActive ? 'text-blue-600' : ''}`}>{label}</span>
-      </a>
-    </div>
-  );
+          <span className={`font-medium ${isActive ? 'text-blue-600' : ''}`}>{label}</span>
+        </Link>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -93,7 +101,6 @@ function Sidebar() {
                       {/* Logo Text - Now Clickable */}
                       <Link 
                         to="/my-day" 
-                        onClick={() => setActiveItem('my-day')}
                         className="flex items-center hover:opacity-80 transition-opacity"
                       >
                         <span className="text-slate-800">Todo</span>
@@ -119,7 +126,7 @@ function Sidebar() {
               {/* NavItems */}
               <NavItem
                 id="my-day"
-                isActive={activeItem === 'my-day'}
+                to="/my-day"
                 icon={
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -130,7 +137,7 @@ function Sidebar() {
 
               <NavItem
                 id="next-7-days"
-                isActive={activeItem === 'next-7-days'}
+                to="/next7days"
                 icon={
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -141,7 +148,7 @@ function Sidebar() {
 
               <NavItem
                 id="all-tasks"
-                isActive={activeItem === 'all-tasks'}
+                to="/alltasks"
                 icon={
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -152,7 +159,7 @@ function Sidebar() {
 
               <NavItem
                 id="calendar"
-                isActive={activeItem === 'calendar'}
+                to="/calendar"
                 icon={
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -178,7 +185,7 @@ function Sidebar() {
               <div className="space-y-0.5">
                 <NavItem
                   id="personal"
-                  isActive={activeItem === 'personal'}
+                  to="/personal"
                   icon={
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -188,7 +195,7 @@ function Sidebar() {
                 />
                 <NavItem
                   id="work"
-                  isActive={activeItem === 'work'}
+                  to="/work"
                   icon={
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />

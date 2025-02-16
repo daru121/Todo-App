@@ -1,6 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import MyDay from './pages/MyDay';
+import Next7Days from './pages/Next7Days';
+import AllTasks from './pages/AllTasks';
+import Personal from './pages/Personal';
+import Work from './pages/Work';
 
 function App() {
   return (
@@ -11,6 +15,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/my-day" replace />} />
             <Route path="/my-day" element={<MyDay />} />
+            <Route path="/next7days" element={<Next7Days />} />
+            <Route path="/alltasks" element={<AllTasks />} />
+            <Route path="/personal" element={<Personal />} />
+            <Route path="/work" element={<Work />} />
             {/* Add other routes as needed */}
           </Routes>
         </main>
