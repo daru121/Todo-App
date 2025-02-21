@@ -40,12 +40,13 @@ router.get('/tasks', async (req, res) => {
 
 // Create new task
 router.post('/tasks', async (req, res) => {
-  const { title, list_type = 'Personal' } = req.body;
+  const { title, list_type = 'Personal', due_date } = req.body;
   
   try {
+    console.log(req.body); // Tambahkan ini untuk melihat data yang diterima
     const [result] = await db.query(
-      'INSERT INTO tasks (title, list_type) VALUES (?, ?)',
-      [title, list_type]
+      'INSERT INTO tasks (title, list_type, due_date) VALUES (?, ?, ?)',
+      [title, list_type, due_date]
     );
     
     const [newTask] = await db.query(
@@ -55,6 +56,7 @@ router.post('/tasks', async (req, res) => {
     
     res.status(201).json(newTask[0]);
   } catch (error) {
+    console.error('Error creating task:', error);
     res.status(400).json({ message: error.message });
   }
 });
